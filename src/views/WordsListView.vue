@@ -1,3 +1,11 @@
+<script setup>
+import WordsTable from "@/components/WordsTable.vue";
+
+
+
+</script>
+
+
 <template>
     <div>
         <h1 class="text-center mt-8 text-xl">Select Grade</h1>
@@ -101,69 +109,7 @@
             <button class="border rounded-md transition-all hover:bg-custom-orange/20 col-span-2 col-start-2 border-blue-gray-200 px-3 py-2">Select all</button>
         </div>
     </div>
-    <div class="mt-4">
-        <table class="mx-auto w-3/4 max-w-[980px] text-center ">
-            <thead>
-                <tr>
-                    <th>
-                        <p class="my-4 py-4">Kanji</p>
-                    </th>
-                    <th>
-                        <p>Reading on</p>
-                    </th>
-                    <th>
-                        <p>Reading kun</p>
-                    </th>
-                    <th>
-                        <p>meaning</p>
-                    </th>
-                    <th>
-                        <p>grade</p>
-                    </th>
-                </tr>
-            </thead>
-            <tbody >
-                <tr class="border-b-2 mb-4 border-custom-bg-light/25">
-                    <td>
-                        <p class="text-3xl ">一</p>
-                    </td>
-                    <td>
-                        <p>いち</p>
-                        <p>いつ</p>
-                    </td>
-                    <td>
-                        <p>ひと-</p>
-                        <p>ひと.つ</p>
-                    </td>
-                    <td>
-                        <p>One</p>
-                    </td>
-                    <td>
-                        <p>1</p>
-                    </td>
-                </tr>
-                <tr class="border-b-2 border-custom-bg-light/25 ">
-                        <td>
-                            <p class="text-3xl">一</p>
-                        </td>
-                        <td>
-                            <p>いち</p>
-                            <p>いつ</p>
-                        </td>
-                        <td>
-                            <p>ひと-</p>
-                            <p>ひと.つ</p>
-                        </td>
-                        <td>
-                            <p>One</p>
-                        </td>
-                        <td>
-                            <p>1</p>
-                        </td>
-                    </tr>
-            </tbody>
-        </table>
-    </div>
+    <WordsTable />
 </template>
 
 <style scoped>

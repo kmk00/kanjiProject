@@ -1,0 +1,47 @@
+{
+    "一": {
+        "strokes": 1,
+        "grade": 1,
+        "freq": 2,
+        "jlpt_old": 4,
+        "jlpt_new": 5,
+        "meanings": ["One","One Radical (no.1)"],
+        "readings_on": ["いち","いつ"],
+        "readings_kun": ["ひと-","ひと.つ"],
+        "wk_level": 1,
+        "wk_meanings": ["One"],
+        "wk_readings_on": ["いち","いつ"],
+        "wk_readings_kun": ["!ひと"],
+        "wk_radicals": ["Ground"]
+    },
+    "二": {
+        "strokes": 2,
+        "grade": 1,
+        "freq": 9,
+        "jlpt_old": 4,
+        "jlpt_new": 5,
+        "meanings": ["Two","Two Radical (no. 7)"],
+        "readings_on": ["に","じ"],
+        "readings_kun": ["ふた","ふた.つ","ふたたび"],
+        "wk_level": 1,
+        "wk_meanings": ["Two"],
+        "wk_readings_on": ["に"],
+        "wk_readings_kun": ["!ふた"],
+        "wk_radicals": ["Two"]
+    },
+    "九": {
+        "strokes": 2,
+        "grade": 1,
+        "freq": 55,
+        "jlpt_old": 4,
+        "jlpt_new": 5,
+        "meanings": ["Nine"],
+        "readings_on": ["きゅう","く"],
+        "readings_kun": ["ここの","ここの.つ"],
+        "wk_level": 1,
+        "wk_meanings": ["Nine"],
+        "wk_readings_on": ["く","きゅう"],
+        "wk_readings_kun": ["!ここの"],
+        "wk_radicals": ["Nine"]
+    }
+}
