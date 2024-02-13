@@ -1,7 +1,14 @@
 <script setup>
+import GradeSelector from "@/components/GradeSelector.vue";
 import WordsTable from "@/components/WordsTable.vue";
 
+import { reactive } from "vue";
 
+let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }])
+
+const selectGrade = (grade) => {
+    gradesSelected[grade - 1][grade] = !gradesSelected[grade - 1][grade]
+}
 
 </script>
 
@@ -10,106 +17,10 @@ import WordsTable from "@/components/WordsTable.vue";
     <div>
         <h1 class="text-center mt-8 text-xl">Select Grade</h1>
         <div class="md:flex mt-4 grid grid-cols-4 gap-2 w-fit mx-auto md:p-4 md:justify-center">
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >1</span
-                ></label>
-            </div>
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >2</span
-                ></label>
-            </div>
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >3</span
-                ></label>
-            </div>
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >4</span
-                ></label>
-            </div>
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    />
-                    <span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >5</span
-                ></label>
-            </div>
-            <div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >6</span
-                ></label>
-            </div><div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >7</span
-                ></label>
-            </div><div class="inline-flex items-center">
-                <label
-                    class="relative flex items-center  rounded-full cursor-pointer"
-                    >
-                    <input
-                    
-                    type="checkbox"
-                    class="peer relative appearance-none w-10 h-10 border rounded-md border-blue-gray-200 cursor-pointer transition-all before:content[''] before:block before:bg-custom-orange before:rounded-md before:w-10 before:h-10  before:absolute before:top-2/4 before:left-2/4 before:-translate-y-2/4 before:-translate-x-2/4 before:opacity-0 hover:before:opacity-10 before:transition-opacity checked:bg-custom-orange checked:custom-orange checked:before:custom-orange"
-                    /><span
-                    class="absolute peer-checked:text-black transition-opacity opacity-100 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 text-lg -translate-x-2/4 peer-checked:opacity-100"
-                    >8</span
-                ></label>
-            </div>
-            <button class="border rounded-md transition-all hover:bg-custom-orange/20 col-span-2 col-start-2 border-blue-gray-200 px-3 py-2">Select all</button>
+            <GradeSelector v-for="i in 8" :key="i" :grade="i" :gradeStatus="gradesSelected[i-1]" @selectGrade="selectGrade"/>
         </div>
     </div>
-    <WordsTable />
+    <WordsTable :gradesSelected="gradesSelected"/>
 </template>
 
 <style scoped>
