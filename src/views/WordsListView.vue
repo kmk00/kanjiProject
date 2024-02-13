@@ -9,7 +9,6 @@ let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: fa
 const selectGrade = (grade) => {
     gradesSelected[grade - 1][grade] = !gradesSelected[grade - 1][grade]
 }
-
 </script>
 
 
@@ -22,9 +21,3 @@ const selectGrade = (grade) => {
     </div>
     <WordsTable :gradesSelected="gradesSelected"/>
 </template>
-
-<style scoped>
-
-
-
-</style>

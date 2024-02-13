@@ -4,6 +4,7 @@ import WordRow from './WordRow.vue';
 import words  from '@/assets/kanji-jouyou.json';
 
 const { gradesSelected } = defineProps(["gradesSelected"])
+
 let filteredWords = ref([])
 
 watch(gradesSelected, () => {
@@ -17,9 +18,6 @@ watch(gradesSelected, () => {
         filteredWords.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
         .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));
 })
-
-
-
 </script>
 
 <template>
@@ -45,7 +43,7 @@ watch(gradesSelected, () => {
                     </tr>
                 </thead>
                 <tbody >
-                    <WordRow v-for="(word) in filteredWords"  :word="word" />
+                    <WordRow v-for="(word) in filteredWords" :word="word"/>
                 </tbody>
             </table>
         </div>
