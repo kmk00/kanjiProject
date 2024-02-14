@@ -63,6 +63,11 @@ const clearOptions = () => {
     gradesSelected = [{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }]
     options.grades = gradesSelected
     filteredWords.value = []
+    errorMessage.value = ''
+    quiz.value = {
+        numberOfQuestions: null,
+        questionArray: [],
+    }
 }
 
 const initialiseQuiz = () => {
@@ -72,11 +77,24 @@ const initialiseQuiz = () => {
         return
     }
     isGame.value = true
-
-
-
-
+    quiz.value.questionArray = pickQuestionsToQuiz(filteredWords.value, quiz.value.numberOfQuestions)
+    
 }
+
+const pickQuestionsToQuiz = (questionsArray,number) => {
+    const arrayCopy = questionsArray.slice();
+
+    const pickedQuestions = [];
+    for (let i = 0; i < number; i++) {
+        const randomIndex = Math.floor(Math.random() * arrayCopy.length);
+
+        pickedQuestions.push(arrayCopy[randomIndex]);
+        arrayCopy.splice(randomIndex, 1);
+    }
+    return pickedQuestions
+}
+
+
 
 
 </script>
@@ -107,7 +125,7 @@ const initialiseQuiz = () => {
         <div v-if="filteredWords.length > 0" class="mt-4">
             <p class="text-xl p-2">How many words do you want?</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <input type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'max number: ' + filteredWords.length">
+                <input type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWords.length">
                 <div class="grid grid-cols-2 gap-2">
                     <button @click="initialiseQuiz" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Start</button>
                     <button @click="clearOptions" class="p-2 border rounded-md hover:bg-custom-orange/10 transition-all bg-custom-bg border-blue-gray-200 cursor-pointer">Reset</button>
@@ -117,7 +135,7 @@ const initialiseQuiz = () => {
         <p v-if="errorMessage" class="mt-2 text-red-500">{{ errorMessage }}</p>
         <div class="mt-6 p-4 min-h-40 md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
             <p v-if="!isGame" class="text-xl md:text-4xl">Please select the options</p>
-            <p v-else-if="isGame && options.selectFrom === 'kanji'" class="text-3xl md:text-8xl">{{ filteredWords[0].kanji }}</p>
+            <p v-else-if="isGame && options.selectFrom === 'kanji'" class="text-3xl md:text-8xl">{{ quiz.questionArray[0].kanji }}</p>
             <p v-else-if="isGame && options.selectFrom === 'english'" class="text-3xl md:text-8xl">english</p>
             <p v-else-if="isGame && options.selectFrom === 'hiragana'" class="text-3xl md:text-8xl">hiragana</p>
         </div>
