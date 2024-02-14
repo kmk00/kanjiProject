@@ -11,13 +11,14 @@ const selectGrade = (grade) => {
 }
 </script>
 
-
 <template>
     <div>
-        <h1 class="text-center mt-8 text-xl">Select Grade</h1>
-        <div class="md:flex mt-4 grid grid-cols-4 gap-2 w-fit mx-auto md:p-4 md:justify-center">
-            <GradeSelector v-for="i in 8" :key="i" :grade="i" :gradeStatus="gradesSelected[i-1]" @selectGrade="selectGrade"/>
+        <div>
+            <h1 class="text-center mt-8 text-xl">Select Grade</h1>
+            <div class="md:flex mt-4 grid grid-cols-4 gap-2 w-fit mx-auto md:p-4 md:justify-center">
+                <GradeSelector v-for="i in 8" :key="i" :grade="i" :gradeStatus="gradesSelected[i-1]" @selectGrade="selectGrade"/>
+            </div>
         </div>
+        <WordsTable :gradesSelected="gradesSelected"/>
     </div>
-    <WordsTable :gradesSelected="gradesSelected"/>
 </template>

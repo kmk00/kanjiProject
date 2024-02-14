@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, ref, watch } from 'vue';
+import { gsap } from 'gsap';
 import WordRow from './WordRow.vue';
 import words  from '@/assets/kanji-jouyou.json';
 
@@ -18,6 +19,30 @@ watch(gradesSelected, () => {
         filteredWords.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
         .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));
 })
+
+const beforeEnter = (el) => {
+    el.style.opacity = 0
+    el.style.transform = 'translateX(10px)'
+}
+
+const enter = (el) => {
+    gsap.to(el, {
+        x: 0,
+        duration: 0.3,
+        opacity: 1,
+    })
+}
+
+const leave = (el,done) => {
+    gsap.to(el, {
+        x: -10,
+        opacity: 0,
+        duration: 0.3,
+        onComplete: done
+    })
+}
+
+
 </script>
 
 <template>
@@ -43,7 +68,9 @@ watch(gradesSelected, () => {
                     </tr>
                 </thead>
                 <tbody >
-                    <WordRow v-for="(word) in filteredWords" :word="word"/>
+                    <TransitionGroup @enter="enter" @leave="leave" @before-enter="beforeEnter">
+                        <WordRow v-for="(word,index) in filteredWords" :data-index="index" :key="word.kanji" :word="word"/>
+                    </TransitionGroup>
                 </tbody>
             </table>
         </div>
