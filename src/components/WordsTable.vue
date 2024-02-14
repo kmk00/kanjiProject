@@ -2,7 +2,7 @@
 import { defineProps, ref, watch } from 'vue';
 import { gsap } from 'gsap';
 import WordRow from './WordRow.vue';
-import words  from '@/assets/kanji-jouyou.json';
+import words  from '@/assets/kanji.json';
 
 const { gradesSelected } = defineProps(["gradesSelected"])
 
