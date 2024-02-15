@@ -191,7 +191,25 @@ const calculateProgress = () => {
         <div class="mt-6 p-4 min-h-40 md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
             <p v-if="!isGame" class="text-xl md:text-4xl">Please select the options</p>
             <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length " class="text-3xl md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
+            <div v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length" >
+                <div class="grid gap-10 md:text-2xl grid-cols-2">
+                    <div class="flex flex-col">
+                        <p class="border-b border-custom-bg-light/85">on</p>
+                        <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].readings_on[meaningIndex - 1] }}</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <p class="border-b border-custom-bg-light/85">kun</p>
+                        <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_kun.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].readings_kun[meaningIndex - 1] }}</p>
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="isGame && options.selectFrom === 'english' && quiz.currentQuestionIndex < quiz.questionsArray.length" >
+                <div class="flex flex-col md:text-6xl">
+                    <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].meanings[meaningIndex - 1] }}</p>
+                </div>
+            </div>
             <p v-else class="text-3xl">Well done</p> 
+
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
             <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="(questionIndex, id) in quiz.answersIndexes" :key="quiz.uniqueIndexes[id]" :keyid="quiz.uniqueIndexes[id]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
