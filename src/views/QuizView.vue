@@ -1,7 +1,8 @@
 <script setup>
 import GradeSelector from '@/components/GradeSelector.vue';
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import words  from '@/assets/kanji.json';
+import AnswerButton from '@/components/AnswerButton.vue';
 
 let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }])
 let filteredWords = ref([])
@@ -13,10 +14,12 @@ let options = reactive({
 
 let quiz = ref({
     numberOfQuestions: null,
-    questionArray: [],
+    currentQuestionIndex: null,
+    questionsArray: [],
+    answersIndexes: []
 })
 
-
+const refValueOfQuestionIndex = ref(null);
 const isGame = ref(false)
 
 const errorMessage = ref('')
@@ -25,6 +28,14 @@ const selectGrade = (grade) => {
     //Grade selection
     gradesSelected[grade - 1][grade] = !gradesSelected[grade - 1][grade]
 }
+
+
+watch(() => quiz.value.currentQuestionIndex, () => {
+    if(quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length){
+        return
+    }    
+    prepareAnswersIndexes()
+})
 
 
 const selectOptions = () => {
@@ -66,18 +77,22 @@ const clearOptions = () => {
     errorMessage.value = ''
     quiz.value = {
         numberOfQuestions: null,
-        questionArray: [],
+        questionsArray: [],
+        currentQuestionIndex: null,
+        answersIndexes: []
     }
 }
 
 const initialiseQuiz = () => {
-
     if (quiz.value.numberOfQuestions < 1 || quiz.value.numberOfQuestions > filteredWords.value.length) {
         errorMessage.value = 'Please provide valid number of questions.'
         return
     }
+
     isGame.value = true
-    quiz.value.questionArray = pickQuestionsToQuiz(filteredWords.value, quiz.value.numberOfQuestions)
+    quiz.value.currentQuestionIndex = 0
+
+    quiz.value.questionsArray = pickQuestionsToQuiz(filteredWords.value, quiz.value.numberOfQuestions)
     
 }
 
@@ -87,18 +102,45 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
     const pickedQuestions = [];
     for (let i = 0; i < number; i++) {
         const randomIndex = Math.floor(Math.random() * arrayCopy.length);
-
         pickedQuestions.push(arrayCopy[randomIndex]);
         arrayCopy.splice(randomIndex, 1);
     }
     return pickedQuestions
 }
 
+const prepareAnswersIndexes = () => {
+    quiz.value.answersIndexes = [];
+    quiz.value.answersIndexes.push(quiz.value.currentQuestionIndex);
+    for (let i = 0; i < 3; i++) {
+        let index;
+        do {
+            index = Math.floor(Math.random() * quiz.value.questionsArray.length);
+        } while (quiz.value.answersIndexes.includes(index)); 
+        quiz.value.answersIndexes.push(index);
+    }
+
+    quiz.value.answersIndexes = shuffleArray(quiz.value.answersIndexes);
+
+}
+
+const nextQuestion = () => {
+    if (quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length) {
+        return
+    }
+
+    quiz.value.currentQuestionIndex++
+}
+
+const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
+
+
+
+
 </script>
 
 <template>
     <div class="w-3/4 md:w-[600px] mx-auto">
-        {{ quiz }}
+        <button class="p-2 " >Next</button>
         <form v-if="filteredWords.length == 0">
             <div class="mt-8 flex md:flex-row md:gap-0 gap-2 flex-col md:grid-cols-2">
                 <div class="flex self-center md:max-w-[193px] flex-wrap gap-2 items-center">
@@ -112,8 +154,8 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
                     </select>
                     <button @click.prevent="selectOptions" class=" row-span-2 hover:bg-custom-orange/10 transition-all p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">Confirm</button>
                     <select v-model="options.selectTo" class="h-10 p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
-                        <option>hiragana</option>
                         <option>kanji</option>
+                        <option>hiragana</option>
                         <option>english</option>
                     </select>
                 </div>
@@ -124,7 +166,8 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWords.length">
                 <div class="grid grid-cols-2 gap-2">
-                    <button @click="initialiseQuiz" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Start</button>
+                    <button v-if="!isGame" @click="initialiseQuiz" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Start</button>
+                    <button v-else @click="nextQuestion" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Next Question</button>
                     <button @click="clearOptions" class="p-2 border rounded-md hover:bg-custom-orange/10 transition-all bg-custom-bg border-blue-gray-200 cursor-pointer">Reset</button>
                 </div>
             </div>
@@ -132,32 +175,17 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
         <p v-if="errorMessage" class="mt-2 text-red-500">{{ errorMessage }}</p>
         <div class="mt-6 p-4 min-h-40 md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
             <p v-if="!isGame" class="text-xl md:text-4xl">Please select the options</p>
-            <p v-else-if="isGame && options.selectFrom === 'kanji'" class="text-3xl md:text-8xl">{{ quiz.questionArray[0].kanji }}</p>
-            <p v-else-if="isGame && options.selectFrom === 'english'" class="text-3xl md:text-8xl">english</p>
-            <p v-else-if="isGame && options.selectFrom === 'hiragana'" class="text-3xl md:text-8xl">hiragana</p>
+            <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length " class="text-3xl md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
+            <!-- <div v-else-if="isGame && options.selectFrom === 'english' && quiz.currentQuestionIndex < quiz.questionsArray.length" class="text-xl text-center md:text-3xl">
+                <p v-for="meaning in quiz.questionsArray[quiz.currentQuestionIndex].meanings">{{ meaning}}</p>
+            </div>
+            <div v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length" class="text-3xl md:text-8xl">
+                <p v-for="meaning in quiz.questionsArray[quiz.currentQuestionIndex].meanings">hiragana</p>
+            </div>-->
+            <p v-else class="text-3xl">Well done</p> 
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
-            <div>
-                <button v-if="isGame && options.selectTo === 'kanji'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">kanji</button>
-                <button v-else-if="isGame && options.selectTo === 'english'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">english</button>
-                <button v-else-if="isGame && options.selectTo === 'hiragana'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">hiragana</button>
-            </div>
-            <div>
-                <button v-if="isGame && options.selectTo === 'kanji'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">kanji</button>
-                <button v-else-if="isGame && options.selectTo === 'english'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">english</button>
-                <button v-else-if="isGame && options.selectTo === 'hiragana'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">hiragana</button>
-            </div>
-            <div>
-                <button v-if="isGame && options.selectTo === 'kanji'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">kanji</button>
-                <button v-else-if="isGame && options.selectTo === 'english'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">english</button>
-                <button v-else-if="isGame && options.selectTo === 'hiragana'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">hiragana</button>
-            </div>
-            <div>
-                <button v-if="isGame && options.selectTo === 'kanji'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">kanji</button>
-                <button v-else-if="isGame && options.selectTo === 'english'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">english</button>
-                <button v-else-if="isGame && options.selectTo === 'hiragana'" class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">hiragana</button>
-            </div>
-
+            <AnswerButton v-if="isGame" v-for="qIndex in quiz.answersIndexes" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="qIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
         </div>
     </div>
 </template>
