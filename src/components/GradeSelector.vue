@@ -1,6 +1,5 @@
 <script setup>
 
-import { defineProps,defineEmits } from 'vue';
 
 const { grade, gradeStatus } = defineProps(["grade"])
 const emit = defineEmits(["selectGrade"])

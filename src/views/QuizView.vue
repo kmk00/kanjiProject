@@ -94,7 +94,7 @@ const clearOptions = () => {
 }
 
 const initialiseQuiz = () => {
-    if (quiz.value.numberOfQuestions < 1 || quiz.value.numberOfQuestions > filteredWordsByGrade.value.length) {
+    if (quiz.value.numberOfQuestions < 4 || quiz.value.numberOfQuestions > filteredWordsByGrade.value.length) {
         errorMessage.value = 'Please provide valid number of questions.'
         return
     }
@@ -153,7 +153,6 @@ const calculateProgress = () => {
 
 <template>
     <div class="w-3/4 md:w-[600px] mx-auto">
-        <button class="p-2 " >Next</button>
         <form v-if="filteredWordsByGrade.length == 0">
             <div class="mt-8 flex md:flex-row md:gap-0 gap-2 flex-col md:grid-cols-2">
                 <div class="flex self-center md:max-w-[193px] flex-wrap gap-2 items-center">
@@ -195,7 +194,7 @@ const calculateProgress = () => {
             <p v-else class="text-3xl">Well done</p> 
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
-            <AnswerButton v-if="isGame" v-for="questionIndex in quiz.answersIndexes" :key="quiz.uniqueIndexes[questionIndex]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
+            <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="questionIndex in quiz.answersIndexes" :key="quiz.uniqueIndexes[questionIndex]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
         </div>
     </div>
 </template>
