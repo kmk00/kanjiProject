@@ -3,9 +3,14 @@ import GradeSelector from '@/components/GradeSelector.vue';
 import { reactive, ref, watch } from "vue";
 import words  from '@/assets/kanji.json';
 import AnswerButton from '@/components/AnswerButton.vue';
+import {uuid} from 'vue-uuid';
 
+// Options selection for grade in form 
 let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }])
-let filteredWords = ref([])
+
+// Table of words filtered by grade
+let filteredWordsByGrade = ref([])
+
 let options = reactive({
     grades: gradesSelected,
     selectFrom: '',
@@ -16,10 +21,10 @@ let quiz = ref({
     numberOfQuestions: null,
     currentQuestionIndex: null,
     questionsArray: [],
-    answersIndexes: []
+    answersIndexes: [],
+    uniqueIndexes: []
 })
 
-const refValueOfQuestionIndex = ref(null);
 const isGame = ref(false)
 
 const errorMessage = ref('')
@@ -31,11 +36,13 @@ const selectGrade = (grade) => {
 
 
 watch(() => quiz.value.currentQuestionIndex, () => {
-    if(quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length){
+    if (quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length) {
         return
     }    
     prepareAnswersIndexes()
-    console.log("next")
+    for (let i = 0; i < quiz.value.answersIndexes.length; i++) {
+        quiz.value.uniqueIndexes.push(uuid.v4());
+    }
 })
 
 
@@ -59,7 +66,7 @@ const selectOptions = () => {
             gradesToFilter.push(i + 1);
         }
     }
-    filteredWords.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
+    filteredWordsByGrade.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
         .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));   
 }
 
@@ -74,18 +81,20 @@ const clearOptions = () => {
     options.selectTo = ''
     gradesSelected = [{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }]
     options.grades = gradesSelected
-    filteredWords.value = []
+    filteredWordsByGrade.value = []
     errorMessage.value = ''
     quiz.value = {
         numberOfQuestions: null,
         questionsArray: [],
         currentQuestionIndex: null,
-        answersIndexes: []
+        answersIndexes: [],
+        uniqueIndexes: []
+
     }
 }
 
 const initialiseQuiz = () => {
-    if (quiz.value.numberOfQuestions < 1 || quiz.value.numberOfQuestions > filteredWords.value.length) {
+    if (quiz.value.numberOfQuestions < 1 || quiz.value.numberOfQuestions > filteredWordsByGrade.value.length) {
         errorMessage.value = 'Please provide valid number of questions.'
         return
     }
@@ -93,7 +102,7 @@ const initialiseQuiz = () => {
     isGame.value = true
     quiz.value.currentQuestionIndex = 0
 
-    quiz.value.questionsArray = pickQuestionsToQuiz(filteredWords.value, quiz.value.numberOfQuestions)
+    quiz.value.questionsArray = pickQuestionsToQuiz(filteredWordsByGrade.value, quiz.value.numberOfQuestions)
     
 }
 
@@ -129,6 +138,7 @@ const nextQuestion = () => {
         return
     }
 
+    quiz.value.uniqueIndexes = [];
     quiz.value.currentQuestionIndex++
 }
 
@@ -144,7 +154,7 @@ const calculateProgress = () => {
 <template>
     <div class="w-3/4 md:w-[600px] mx-auto">
         <button class="p-2 " >Next</button>
-        <form v-if="filteredWords.length == 0">
+        <form v-if="filteredWordsByGrade.length == 0">
             <div class="mt-8 flex md:flex-row md:gap-0 gap-2 flex-col md:grid-cols-2">
                 <div class="flex self-center md:max-w-[193px] flex-wrap gap-2 items-center">
                     <GradeSelector v-for="i in 8" :key="i" :grade="i" :gradeStatus="gradesSelected[i - 1]" @selectGrade="selectGrade"/>
@@ -164,10 +174,10 @@ const calculateProgress = () => {
                 </div>
             </div>
         </form>
-        <div v-if="filteredWords.length > 0" class="mt-4">
+        <div v-if="filteredWordsByGrade.length > 0" class="mt-4">
             <p class="text-xl p-2">How many words do you want?</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <input v-if="!isGame" type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWords.length">
+                <input v-if="!isGame" type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWordsByGrade.length">
                 <div v-else  class="w-full border rounded-md border-blue-gray-200">
                     <div :style="`width: ${calculateProgress()}%`" class="bg-custom-orange h-full"></div>
                 </div>
@@ -182,16 +192,10 @@ const calculateProgress = () => {
         <div class="mt-6 p-4 min-h-40 md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
             <p v-if="!isGame" class="text-xl md:text-4xl">Please select the options</p>
             <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length " class="text-3xl md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
-            <!-- <div v-else-if="isGame && options.selectFrom === 'english' && quiz.currentQuestionIndex < quiz.questionsArray.length" class="text-xl text-center md:text-3xl">
-                <p v-for="meaning in quiz.questionsArray[quiz.currentQuestionIndex].meanings">{{ meaning}}</p>
-            </div>
-            <div v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length" class="text-3xl md:text-8xl">
-                <p v-for="meaning in quiz.questionsArray[quiz.currentQuestionIndex].meanings">hiragana</p>
-            </div>-->
             <p v-else class="text-3xl">Well done</p> 
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
-            <AnswerButton v-if="isGame" v-for="qIndex in quiz.answersIndexes" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="qIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
+            <AnswerButton v-if="isGame" v-for="questionIndex in quiz.answersIndexes" :key="quiz.uniqueIndexes[questionIndex]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
         </div>
     </div>
 </template>
