@@ -1,18 +1,27 @@
 <script setup>
 import { ref } from 'vue';
-const { correctAnswerIndex, questionIndex,  selectFrom, selectTo, quiz  } = defineProps(["correctAnswerIndex", "questionIndex", "selectFrom", "selectTo", "quiz"])
+const { correctAnswerIndex, questionIndex,  selectFrom, selectTo, quiz,keyid  } = defineProps(["correctAnswerIndex", "questionIndex", "selectFrom", "selectTo", "quiz","keyid"])
 
 const isCorrect = ref(null);
 
 
 const selectAnswer = (e) => {
-    if (e.currentTarget.id == correctAnswerIndex) isCorrect.value = true      
+    if (e.currentTarget.id == correctAnswerIndex) isCorrect.value = true 
+    console.log("\ncorrect answer index",correctAnswerIndex)
+    console.log("button index", e.currentTarget.id)
+    console.log("isCorrect",isCorrect.value)
+    console.log("correct answer index", questionIndex)
+    console.log("key",keyid)
+
 }
 
 </script>
 
 <template>
     <div>
+        keyid{{ keyid }}<br>
+        correct answer index {{ correctAnswerIndex }}<br>
+        question index {{ questionIndex }}
         <button :id="questionIndex" 
         :style="{backgroundColor: isCorrect ? 'green' : 'transparent'}" 
         @click="selectAnswer" v-if="selectTo === 'english'"  

@@ -194,7 +194,7 @@ const calculateProgress = () => {
             <p v-else class="text-3xl">Well done</p> 
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
-            <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="questionIndex in quiz.answersIndexes" :key="quiz.uniqueIndexes[questionIndex]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
+            <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="(questionIndex, id) in quiz.answersIndexes" :key="quiz.uniqueIndexes[id]" :keyid="quiz.uniqueIndexes[id]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
         </div>
     </div>
 </template>
