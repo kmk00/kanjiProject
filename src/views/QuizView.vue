@@ -145,7 +145,7 @@ const nextQuestion = () => {
 const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
 const calculateProgress = () => {
-    return (quiz.value.currentQuestionIndex / quiz.value.questionsArray.length) * 100
+    return ((quiz.value.currentQuestionIndex) / (quiz.value.questionsArray.length)) * 100
 }
 
 
@@ -160,12 +160,14 @@ const calculateProgress = () => {
                 </div>
                 <div class="grid grid-cols-2 grid-rows-2 gap-2 w-full">
                     <select v-model="options.selectFrom" class="h-10 p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer" placeholder="" >
+                        <option value="" disabled>Select from</option>
                         <option class="">kanji</option>
                         <option class="">hiragana</option>
                         <option class="">english</option>
                     </select>
                     <button @click.prevent="selectOptions" class=" row-span-2 hover:bg-custom-orange/10 transition-all p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">Confirm</button>
                     <select v-model="options.selectTo" class="h-10 p-2 border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
+                        <option value="" disabled>Select to</option>
                         <option>kanji</option>
                         <option>hiragana</option>
                         <option>english</option>
@@ -174,8 +176,9 @@ const calculateProgress = () => {
             </div>
         </form>
         <div v-if="filteredWordsByGrade.length > 0" class="mt-4">
-            <p class="text-xl p-2">How many words do you want?</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <p v-if="!isGame" class="text-xl p-2">How many words do you want?</p>
+            <p v-else>{{ quiz.currentQuestionIndex }} / {{ quiz.questionsArray.length}}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input v-if="!isGame" type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWordsByGrade.length">
                 <div v-else  class="w-full border rounded-md border-blue-gray-200">
                     <div :style="`width: ${calculateProgress()}%`" class="bg-custom-orange h-full"></div>
@@ -188,7 +191,7 @@ const calculateProgress = () => {
             </div>
         </div>
         <p v-if="errorMessage" class="mt-2 text-red-500">{{ errorMessage }}</p>
-        <div class="mt-6 p-4 min-h-40 md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
+        <div @dblclick="nextQuestion" class="mt-6 p-4 min-h-40 select-none md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
             <p v-if="!isGame" class="text-xl md:text-4xl">Please select the options</p>
             <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length " class="text-3xl md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
             <div v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length" >
@@ -209,7 +212,6 @@ const calculateProgress = () => {
                 </div>
             </div>
             <p v-else class="text-3xl">Well done</p> 
-
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
             <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="(questionIndex, id) in quiz.answersIndexes" :key="quiz.uniqueIndexes[id]" :keyid="quiz.uniqueIndexes[id]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
