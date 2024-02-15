@@ -7,11 +7,8 @@ const isCorrect = ref(null);
 
 
 
-
-
-const selectAnswer = () => {
-    (questionIndex === correctAnswerIndex) ? isCorrect.value = true : isCorrect.value = false   
-    console.log(isCorrect.value)
+const selectAnswer = (e) => {
+    (e.currentTarget.id === correctAnswerIndex) ? isCorrect.value = true : isCorrect.value = false;
 }
 
 </script>
@@ -20,7 +17,7 @@ const selectAnswer = () => {
     <div>
         {{ questionIndex }}
         {{ correctAnswerIndex }}
-        <button :style="{backgroundColor: isCorrect && 'green'}" @click="selectAnswer" v-if="selectTo === 'hiragana'"  class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
+        <button :id="questionIndex" :style="{backgroundColor: isCorrect && 'green'}" @click="selectAnswer" v-if="selectTo === 'hiragana'"  class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
             <p v-for="meaningIndex in quiz.questionsArray[questionIndex].meanings.length ">{{ quiz.questionsArray[questionIndex].meanings[meaningIndex-1]}}</p>
         </button>
     </div>

@@ -35,6 +35,7 @@ watch(() => quiz.value.currentQuestionIndex, () => {
         return
     }    
     prepareAnswersIndexes()
+    console.log("next")
 })
 
 
@@ -133,7 +134,9 @@ const nextQuestion = () => {
 
 const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
-
+const calculateProgress = () => {
+    return (quiz.value.currentQuestionIndex / quiz.value.questionsArray.length) * 100
+}
 
 
 </script>
@@ -164,7 +167,10 @@ const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
         <div v-if="filteredWords.length > 0" class="mt-4">
             <p class="text-xl p-2">How many words do you want?</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <input type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWords.length">
+                <input v-if="!isGame" type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWords.length">
+                <div v-else  class="w-full border rounded-md border-blue-gray-200">
+                    <div :style="`width: ${calculateProgress()}%`" class="bg-custom-orange h-full"></div>
+                </div>
                 <div class="grid grid-cols-2 gap-2">
                     <button v-if="!isGame" @click="initialiseQuiz" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Start</button>
                     <button v-else @click="nextQuestion" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Next Question</button>
