@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { gsap } from 'gsap';
 import WordRow from './WordRow.vue';
 import words  from '@/assets/kanji.json';

@@ -94,9 +94,6 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
     return pickedQuestions
 }
 
-
-
-
 </script>
 
 <template>
