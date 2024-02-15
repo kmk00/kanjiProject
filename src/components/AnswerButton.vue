@@ -8,7 +8,6 @@ const isAnswered = ref(false)
 const selectAnswer = (e) => {
     isAnswered.value = true
     if (e.currentTarget.id == correctAnswerIndex) isCorrect.value = true 
-    console.log(isAnswered.value, isCorrect.value)
 }
 
 </script>
@@ -25,8 +24,8 @@ const selectAnswer = (e) => {
             :style="isAnswered && { backgroundColor: isCorrect ? '#2dc8639e' : '#923838d6' }" 
             @click="selectAnswer" v-if="selectTo === 'kanji'"  
             class="min-h-20 w-full disa p-2 hover:bg-custom-orange/20 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
-                <p class="md:text-5xl">{{ quiz.questionsArray[questionIndex].kanji }}</p>
-            </button>
+            <p class="md:text-5xl">{{ quiz.questionsArray[questionIndex].kanji }}</p>
+        </button>
         <button :id="questionIndex" 
         :style="isAnswered && { backgroundColor: isCorrect ? 'green' : '#923838d6' }" 
         @click="selectAnswer" v-if="selectTo === 'hiragana'"  
