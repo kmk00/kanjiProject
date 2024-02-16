@@ -5,6 +5,7 @@ import words  from '@/assets/kanji.json';
 import AnswerButton from '@/components/AnswerButton.vue';
 import {uuid} from 'vue-uuid';
 import { useScoreStore } from '@/stores/score';
+import QuestionPanel from '@/components/QuestionPanel.vue';
 
 // Global score register right and wrong answers
 const scoreStore = useScoreStore()
@@ -215,32 +216,7 @@ const calculateProgress = () => {
             </div>
         </div>
         <p v-if="errorMessage" class="mt-2 text-red-500">{{ errorMessage }}</p>
-        <div @dblclick="nextQuestion" class="mt-6 p-4 min-h-40 select-none md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
-            <p v-if="!isGame" class="text-xl animate-fade-in md:text-4xl">Please select the options</p>
-            <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length " class="text-3xl animate-fade-in md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
-            <div v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length" >
-                <div class="grid animate-fade-in gap-10 md:text-2xl grid-cols-2">
-                    <div class="flex flex-col">
-                        <p class="border-b border-custom-bg-light/85">on</p>
-                        <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].readings_on[meaningIndex - 1] }}</p>
-                    </div>
-                    <div class="flex flex-col">
-                        <p class="border-b border-custom-bg-light/85">kun</p>
-                        <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_kun.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].readings_kun[meaningIndex - 1] }}</p>
-                    </div>
-                </div>
-            </div>
-            <div v-else-if="isGame && options.selectFrom === 'english' && quiz.currentQuestionIndex < quiz.questionsArray.length" >
-                <div class="flex animate-fade-in flex-col md:text-6xl">
-                    <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].meanings[meaningIndex - 1] }}</p>
-                </div>
-            </div>
-            <div v-else class="animate-fade-in">
-                <p class="text-3xl">Well done! Your score:</p>
-                <p class="text-center text-custom-green text-xl">Correct answers: {{ scoreStore.score.correctAnswers }}</p> 
-                <p class="text-center text-custom-red text-xl">Wrong answers: {{ scoreStore.score.wrongAnswers }}</p> 
-            </div>
-        </div>
+        <QuestionPanel :is-game="isGame" :quiz="quiz" :options="options" />
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
             <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="(questionIndex, id) in quiz.answersIndexes" :key="quiz.uniqueIndexes[id]" :keyid="quiz.uniqueIndexes[id]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
         </div>
