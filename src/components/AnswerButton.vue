@@ -4,11 +4,15 @@ import {useScoreStore} from '@/stores/score'
 
 const { correctAnswerIndex, questionIndex,  selectFrom, selectTo, quiz,keyid  } = defineProps(["correctAnswerIndex", "questionIndex", "selectFrom", "selectTo", "quiz","keyid"])
 
+// Global score register right and wrong answers
 const scoreStore = useScoreStore()
+// Check if clicked answer is correct
 const isCorrect = ref(null);
+// Check if answer has been clicked
 const isAnswered = ref(false)
 
 const selectAnswer = (e) => {
+    // After clicking button check if clicked answer is correct
     isAnswered.value = true
     if (e.currentTarget.id == correctAnswerIndex) {
         isCorrect.value = true
