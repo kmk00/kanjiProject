@@ -42,7 +42,6 @@
                 <p v-for="(meaningIndex,idx) in quiz.questionsArray[quiz.currentQuestionIndex].meanings.length ">{{
                 quiz.questionsArray[quiz.currentQuestionIndex].meanings[meaningIndex - 1] }}{{ idx !== quiz.questionsArray[quiz.currentQuestionIndex].meanings.length - 1 ? ',&nbsp' : '' }} </p>
         </div>
-        {{quiz.questionsArray[quiz.currentQuestionIndex].readings_on}}
     </div>
     <FinalScore v-else :total-questions="quiz.questionsArray.length" />
 </div></template>
