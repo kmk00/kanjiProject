@@ -23,6 +23,7 @@ const selectAnswer = (e) => {
 <template>
     <div>
         <Transition name="fade" appear>
+            <!-- Button for english answers -->
             <button 
                 v-if="selectTo === 'english'"
                 :id="questionIndex" 
@@ -34,6 +35,7 @@ const selectAnswer = (e) => {
             </button>
         </Transition>
         <Transition name="fade" appear>
+            <!-- Button for kanji answers -->
             <button 
                 v-if="selectTo === 'kanji'"  
                 :id="questionIndex"
@@ -45,6 +47,7 @@ const selectAnswer = (e) => {
             </button>
         </Transition>
         <Transition name="fade" appear>
+            <!-- Button for hiragana answers -->
             <button 
                 v-if="selectTo === 'hiragana'"  
                 :id="questionIndex"
