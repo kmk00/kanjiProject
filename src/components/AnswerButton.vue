@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import {useScoreStore} from '@/stores/score'
+import { getLimitedArrayLength } from '@/utils/useful'
 
 const { correctAnswerIndex, questionIndex,  selectFrom, selectTo, quiz,keyid  } = defineProps(["correctAnswerIndex", "questionIndex", "selectFrom", "selectTo", "quiz","keyid"])
+
 
 // Global score register right and wrong answers
 const scoreStore = useScoreStore()
@@ -22,6 +24,9 @@ const selectAnswer = (e) => {
         scoreStore.incrementWrongAnswers()
     }
 }
+
+
+
 </script>
 
 <template>
@@ -34,8 +39,8 @@ const selectAnswer = (e) => {
                 :style="isAnswered && {backgroundColor: isCorrect ? '#0dd8549e' : '#923838d6'}" 
                 @click="selectAnswer" 
                 :disabled="isAnswered"  
-                class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
-                <p v-for="meaningIndex in quiz.questionsArray[questionIndex].meanings.length ">{{ quiz.questionsArray[questionIndex].meanings[meaningIndex-1]}}</p>
+                class="flex gap-1 flex-wrap min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
+                <p v-for="(meaningIndex, idx) in quiz.questionsArray[questionIndex].meanings.length " >{{ quiz.questionsArray[questionIndex].meanings[meaningIndex-1]}}{{ idx !== quiz.questionsArray[questionIndex].meanings.length - 1 ? ', ' : '' }}</p>
             </button>
         </Transition>
         <Transition name="fade" appear>
@@ -59,14 +64,18 @@ const selectAnswer = (e) => {
                 :style="isAnswered && { backgroundColor: isCorrect ? '#0dd8549e' : '#923838d6' }" 
                 @click="selectAnswer" 
                 class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
-                <div class="grid grid-cols-2">
-                    <div class="flex flex-col">
-                        <p class="border-b border-custom-bg-light/85">on</p>
-                        <p v-for="meaningIndex in quiz.questionsArray[questionIndex].readings_on.length ">{{ quiz.questionsArray[questionIndex].readings_on[meaningIndex-1]}}</p>
+                <div>
+                    <div class="flex">
+                        <p class="row-start-1 col-start-1 boreder-r-2 border-custom-bg-white  ">on: </p>
+                        <div class="flex row-start-1 col-span-11 flex-wrap  ">
+                            <p class="px-1" v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_on, 4) ">{{ quiz.questionsArray[questionIndex].readings_on[meaningIndex-1]}}</p>
+                        </div>
                     </div>
-                    <div class="flex flex-col">
-                        <p class="border-b border-custom-bg-light/85">kun</p>
-                        <p v-for="meaningIndex in quiz.questionsArray[questionIndex].readings_kun.length ">{{ quiz.questionsArray[questionIndex].readings_kun[meaningIndex - 1] }}</p>
+                    <div class="flex">
+                        <p class="row-start-2 col-start-1  border-custom-bg-white">kun: </p>
+                        <div class="flex row-start-2 col-span-11 flex-wrap">
+                            <p class=" px-1" v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_kun,4) ">{{ quiz.questionsArray[questionIndex].readings_kun[meaningIndex - 1] }}</p>
+                        </div>
                     </div>
                 </div>
             </button>
