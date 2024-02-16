@@ -202,7 +202,7 @@
         </form>
         <div v-if="filteredWordsByGrade.length > 0" class="animate-fade-in mt-4">
             <p v-if="!isGame" class="text-xl p-2">How many words do you want?</p>
-            <p v-else-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length">{{ quiz.currentQuestionIndex }} / {{ quiz.questionsArray.length}}</p>
+            <p class="py-2" v-else-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length">Question: {{ quiz.currentQuestionIndex }} / {{ quiz.questionsArray.length}}</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input 
                     v-if="!isGame" 

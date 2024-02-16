@@ -65,16 +65,16 @@ const selectAnswer = (e) => {
                 @click="selectAnswer" 
                 class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
                 <div>
-                    <div class="flex">
+                    <div class="flex" v-if="quiz.questionsArray[questionIndex].readings_on.length > 0">
                         <p class="row-start-1 col-start-1 boreder-r-2 border-custom-bg-white  ">on: </p>
                         <div class="flex row-start-1 col-span-11 flex-wrap  ">
-                            <p class="px-1" v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_on, 4) ">{{ quiz.questionsArray[questionIndex].readings_on[meaningIndex-1]}}</p>
+                            <p class="px-1"  v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_on, 4) ">{{ quiz.questionsArray[questionIndex].readings_on[meaningIndex-1]}}</p>
                         </div>
                     </div>
-                    <div class="flex">
+                    <div class="flex" v-if="quiz.questionsArray[questionIndex].readings_kun.length > 0">
                         <p class="row-start-2 col-start-1  border-custom-bg-white">kun: </p>
                         <div class="flex row-start-2 col-span-11 flex-wrap">
-                            <p class=" px-1" v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_kun,4) ">{{ quiz.questionsArray[questionIndex].readings_kun[meaningIndex - 1] }}</p>
+                            <p class=" px-1"  v-for="meaningIndex in getLimitedArrayLength(quiz.questionsArray[questionIndex].readings_kun,4) ">{{ quiz.questionsArray[questionIndex].readings_kun[meaningIndex - 1] }}</p>
                         </div>
                     </div>
                 </div>
