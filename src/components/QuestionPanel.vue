@@ -1,8 +1,6 @@
 <script setup>
-    import { useScoreStore } from '@/stores/score';
-
+    import FinalScore from './FinalScore.vue';
     const { isGame, quiz, options } = defineProps(["isGame", "quiz", "options"])
-    const scoreStore = useScoreStore()
 
 </script>
 
@@ -29,11 +27,6 @@
                 <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].meanings[meaningIndex - 1] }}</p>
             </div>
         </div>
-        <div v-else class="animate-fade-in">
-            <p class="text-3xl">Well done! Your score:</p>
-            <p class="text-center text-custom-green text-xl">Correct answers: {{ scoreStore.score.correctAnswers }}</p> 
-            <p class="text-center text-custom-red text-xl">Wrong answers: {{ scoreStore.score.wrongAnswers }}</p> 
-            <p class="text-center text-sm">Number of questions: {{ quiz.questionsArray.length }} </p>
-        </div>
+        <FinalScore v-else :total-questions="quiz.questionsArray.length"/>
     </div>
 </template>
