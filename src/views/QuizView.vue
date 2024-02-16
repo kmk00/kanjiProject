@@ -6,11 +6,14 @@ import AnswerButton from '@/components/AnswerButton.vue';
 import {uuid} from 'vue-uuid';
 import { useScoreStore } from '@/stores/score';
 
+// Global score register right and wrong answers
 const scoreStore = useScoreStore()
+// Check if game is in progress
 const isGame = ref(false)
+// Stores error message
 const errorMessage = ref('')
 
-// Options selection for grade in form 
+// Keep track of selected grades in form options 
 let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }])
 
 // Table of words filtered by grade
@@ -23,7 +26,7 @@ let options = reactive({
     selectTo: '',  
 })
 
-
+// Quiz variables
 let quiz = ref({
     numberOfQuestions: null,
     currentQuestionIndex: null,
@@ -34,24 +37,30 @@ let quiz = ref({
 
 
 const selectGrade = (grade) => {
-    //Grade selection
+    //Grade selection in form - GradeSelector component 
     gradesSelected[grade - 1][grade] = !gradesSelected[grade - 1][grade]
 }
 
-
 watch(() => quiz.value.currentQuestionIndex, () => {
+    // Keeps track of current question index and 
     if (quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length) {
         return
     }    
+
+    // Prepares answers indexes
     prepareAnswersIndexes()
+    
+    // Prepares unique indexes for answer buttons when the question changes 
+    // Essential when the same answer which was correct is shown again in the next question as wrong 
     for (let i = 0; i < quiz.value.answersIndexes.length; i++) {
         quiz.value.uniqueIndexes.push(uuid.v4());
     }
+
 })
 
 
 const selectOptions = () => {
-    //Options selection
+    //Validation of selected options
     if (checkIfGradesInOptionSelected() == false || options.selectFrom == '' || options.selectTo == '') {
         errorMessage.value = 'Please provide all options.'
         return
@@ -63,23 +72,27 @@ const selectOptions = () => {
     }
     errorMessage.value = ''
 
+    //Create array of selected grades
     let gradesToFilter = []
-
     for (let i = 0; i < options.grades.length; i++) {
         if (Object.values(options.grades[i])[0]) {
             gradesToFilter.push(i + 1);
         }
     }
+
+    // Filter words by selected grades
     filteredWordsByGrade.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
         .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));   
 }
 
 const checkIfGradesInOptionSelected = () => {
+    // Check if any grade is selected
     const anySelected = Object.values(options.grades).some((grade) => Object.values(grade).some((status) => status === true))
     return anySelected
 }
 
 const clearOptions = () => {
+    // Clear all options
     isGame.value = false
     options.selectFrom = ''
     options.selectTo = ''
@@ -98,19 +111,23 @@ const clearOptions = () => {
 }
 
 const initialiseQuiz = () => {
+    // Validation of number of questions
     if (quiz.value.numberOfQuestions < 4 || quiz.value.numberOfQuestions > filteredWordsByGrade.value.length) {
         errorMessage.value = 'Please provide valid number of questions.'
         return
     }
 
+    errorMessage.value = ''
+
     isGame.value = true
     quiz.value.currentQuestionIndex = 0
-
     quiz.value.questionsArray = pickQuestionsToQuiz(filteredWordsByGrade.value, quiz.value.numberOfQuestions)
     
 }
 
 const pickQuestionsToQuiz = (questionsArray,number) => {
+    // Pick questions to quiz based on number of questions and save it in an array
+
     const arrayCopy = questionsArray.slice();
 
     const pickedQuestions = [];
@@ -123,6 +140,7 @@ const pickQuestionsToQuiz = (questionsArray,number) => {
 }
 
 const prepareAnswersIndexes = () => {
+    // Prepares answers indexes for current question
     quiz.value.answersIndexes = [];
     quiz.value.answersIndexes.push(quiz.value.currentQuestionIndex);
     for (let i = 0; i < 3; i++) {
@@ -132,12 +150,12 @@ const prepareAnswersIndexes = () => {
         } while (quiz.value.answersIndexes.includes(index)); 
         quiz.value.answersIndexes.push(index);
     }
-
     quiz.value.answersIndexes = shuffleArray(quiz.value.answersIndexes);
 
 }
 
 const nextQuestion = () => {
+    // Prepares next question
     if (quiz.value.currentQuestionIndex >= quiz.value.questionsArray.length) {
         return
     }
@@ -146,9 +164,11 @@ const nextQuestion = () => {
     quiz.value.currentQuestionIndex++
 }
 
+
 const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
 const calculateProgress = () => {
+    // Calculates progress of the quiz
     return ((quiz.value.currentQuestionIndex) / (quiz.value.questionsArray.length)) * 100
 }
 
