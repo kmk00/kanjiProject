@@ -1,6 +1,5 @@
 <script setup>
     import FinalScore from './FinalScore.vue';
-    import {getLimitedArrayLength} from '@/utils/useful'
 
     const { isGame, quiz, options } = defineProps(["isGame", "quiz", "options"])
 
