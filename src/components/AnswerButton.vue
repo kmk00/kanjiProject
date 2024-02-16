@@ -1,34 +1,52 @@
 <script setup>
 import { ref } from 'vue';
+import {useScoreStore} from '@/stores/score'
+
 const { correctAnswerIndex, questionIndex,  selectFrom, selectTo, quiz,keyid  } = defineProps(["correctAnswerIndex", "questionIndex", "selectFrom", "selectTo", "quiz","keyid"])
 
+const scoreStore = useScoreStore()
 const isCorrect = ref(null);
 const isAnswered = ref(false)
 
 const selectAnswer = (e) => {
     isAnswered.value = true
-    if (e.currentTarget.id == correctAnswerIndex) isCorrect.value = true 
+    if (e.currentTarget.id == correctAnswerIndex) {
+        isCorrect.value = true
+        scoreStore.incrementCorrectAnswers()
+    } else {
+        isCorrect.value = false
+        scoreStore.incrementWrongAnswers()
+    }
 }
 
 </script>
 
 <template>
     <div>
-        <button :id="questionIndex" 
+        <button 
+        v-if="selectTo === 'english'"
+        :id="questionIndex" 
         :style="isAnswered && {backgroundColor: isCorrect ? '#0dd8549e' : '#923838d6'}" 
-        @click="selectAnswer" v-if="selectTo === 'english'"  
+        @click="selectAnswer" 
+        :disabled="isAnswered"  
         class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
             <p v-for="meaningIndex in quiz.questionsArray[questionIndex].meanings.length ">{{ quiz.questionsArray[questionIndex].meanings[meaningIndex-1]}}</p>
         </button>
-        <button :id="questionIndex"
+        <button 
+            v-if="selectTo === 'kanji'"  
+            :id="questionIndex"
+            :disabled="isAnswered"
             :style="isAnswered && { backgroundColor: isCorrect ? '#2dc8639e' : '#923838d6' }" 
-            @click="selectAnswer" v-if="selectTo === 'kanji'"  
+            @click="selectAnswer" 
             class="min-h-20 w-full disa p-2 hover:bg-custom-orange/20 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
             <p class="md:text-5xl">{{ quiz.questionsArray[questionIndex].kanji }}</p>
         </button>
-        <button :id="questionIndex" 
-        :style="isAnswered && { backgroundColor: isCorrect ? 'green' : '#923838d6' }" 
-        @click="selectAnswer" v-if="selectTo === 'hiragana'"  
+        <button 
+        v-if="selectTo === 'hiragana'"  
+        :id="questionIndex"
+        :disabled="isAnswered" 
+        :style="isAnswered && { backgroundColor: isCorrect ? '#0dd8549e' : '#923838d6' }" 
+        @click="selectAnswer" 
         class="min-h-20 w-full p-2 hover:bg-custom-orange/10 transition-all border rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer ">
         <div class="grid grid-cols-2">
             <div class="flex flex-col">

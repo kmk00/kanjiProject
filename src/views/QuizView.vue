@@ -4,6 +4,11 @@ import { reactive, ref, watch } from "vue";
 import words  from '@/assets/kanji.json';
 import AnswerButton from '@/components/AnswerButton.vue';
 import {uuid} from 'vue-uuid';
+import { useScoreStore } from '@/stores/score';
+
+const scoreStore = useScoreStore()
+const isGame = ref(false)
+const errorMessage = ref('')
 
 // Options selection for grade in form 
 let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: false }, { 5: false }, { 6: false }, { 7: false }, { 8: false }])
@@ -11,11 +16,13 @@ let gradesSelected = reactive([{ 1: false }, { 2: false }, { 3: false }, { 4: fa
 // Table of words filtered by grade
 let filteredWordsByGrade = ref([])
 
+// Quiz options
 let options = reactive({
     grades: gradesSelected,
     selectFrom: '',
     selectTo: '',  
 })
+
 
 let quiz = ref({
     numberOfQuestions: null,
@@ -25,9 +32,6 @@ let quiz = ref({
     uniqueIndexes: []
 })
 
-const isGame = ref(false)
-
-const errorMessage = ref('')
 
 const selectGrade = (grade) => {
     //Grade selection
@@ -89,8 +93,8 @@ const clearOptions = () => {
         currentQuestionIndex: null,
         answersIndexes: [],
         uniqueIndexes: []
-
     }
+    scoreStore.resetScore()
 }
 
 const initialiseQuiz = () => {
@@ -211,7 +215,11 @@ const calculateProgress = () => {
                     <p v-for="meaningIndex in quiz.questionsArray[quiz.currentQuestionIndex].readings_on.length ">{{ quiz.questionsArray[quiz.currentQuestionIndex].meanings[meaningIndex - 1] }}</p>
                 </div>
             </div>
-            <p v-else class="text-3xl">Well done</p> 
+            <div v-else>
+                <p class="text-3xl">Well done! Your score:</p>
+                <p class="text-center text-custom-green text-xl">Correct answers: {{ scoreStore.score.correctAnswers }}</p> 
+                <p class="text-center text-custom-red text-xl">Wrong answers: {{ scoreStore.score.wrongAnswers }}</p> 
+            </div>
         </div>
         <div class="grid md:mt-8 mt-4 grid-cols-2 gap-2">
             <AnswerButton v-if="isGame && quiz.currentQuestionIndex < quiz.questionsArray.length" v-for="(questionIndex, id) in quiz.answersIndexes" :key="quiz.uniqueIndexes[id]" :keyid="quiz.uniqueIndexes[id]" :correctAnswerIndex="quiz.currentQuestionIndex" :questionIndex="questionIndex" :selectFrom="options.selectFrom" :selectTo="options.selectTo" :quiz="quiz"/>
