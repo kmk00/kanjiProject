@@ -6,6 +6,8 @@ import AnswerButton from '@/components/AnswerButton.vue';
 import {uuid} from 'vue-uuid';
 import { useScoreStore } from '@/stores/score';
 import QuestionPanel from '@/components/QuestionPanel.vue';
+import ProgressBar from '@/components/ProgressBar.vue';
+import {shuffleArray} from '@/utils/useful'
 
 // Global score register right and wrong answers
 const scoreStore = useScoreStore()
@@ -166,12 +168,6 @@ const nextQuestion = () => {
 }
 
 
-const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
-
-const calculateProgress = () => {
-    // Calculates progress of the quiz
-    return ((quiz.value.currentQuestionIndex) / (quiz.value.questionsArray.length)) * 100
-}
 
 
 </script>
@@ -205,9 +201,7 @@ const calculateProgress = () => {
             <p v-else>{{ quiz.currentQuestionIndex }} / {{ quiz.questionsArray.length}}</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input v-if="!isGame" type="number" v-model="quiz.numberOfQuestions" :disabled="isGame" class="h-full p-2 border rounded-md disabled:text-gray-500 bg-custom-bg border-blue-gray-200 cursor-pointer " :placeholder="'From 4 to ' + filteredWordsByGrade.length">
-                <div v-else  class="w-full border rounded-md border-blue-gray-200">
-                    <div :style="`width: ${calculateProgress()}%`" class="bg-custom-orange h-full"></div>
-                </div>
+                <ProgressBar v-else :quiz="quiz"/>
                 <div class="grid grid-cols-2 gap-2">
                     <button v-if="!isGame" @click="initialiseQuiz" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Start</button>
                     <button v-else @click="nextQuestion" class="p-2 border hover:bg-custom-orange/10 transition-all rounded-md bg-custom-bg border-blue-gray-200 cursor-pointer">Next Question</button>
