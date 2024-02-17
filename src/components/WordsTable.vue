@@ -47,17 +47,27 @@ const leave = (el,done) => {
 
 <template>
     <div class="mt-4">
-            <table class="mx-auto text-xl w-3/4 max-w-[980px] text-center ">
+            <table class="mx-auto md:text-xl w-3/4 md:max-w-[980px] text-center ">
                 <thead>
                     <tr>
                         <th>
                             <p class="my-4 py-4">Kanji</p>
                         </th>
                         <th>
-                            <p>Reading on</p>
+                            <p class="px-4 flex">
+                                <span class="hidden md:block">
+                                    Reading &nbsp;
+                                </span>
+                                on
+                            </p>
                         </th>
                         <th>
-                            <p>Reading kun</p>
+                            <p class="px-4 flex">
+                                <span class="hidden md:block">
+                                    Reading &nbsp;
+                                </span>
+                                kun
+                            </p>
                         </th>
                         <th>
                             <p>meaning</p>

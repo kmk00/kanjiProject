@@ -14,7 +14,7 @@
         class="mt-6 p-4 min-h-40 select-none md:min-h-80 max-w-[600px] flex justify-center items-center border rounded-md bg-custom-bg border-blue-gray-200">
         <p v-if="!isGame" class="text-xl animate-fade-in md:text-4xl">Please select the options</p>
         <p v-else-if="isGame && options.selectFrom === 'kanji' && quiz.currentQuestionIndex < quiz.questionsArray.length"
-            class="text-3xl animate-fade-in md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
+            class="text-8xl animate-fade-in md:text-8xl">{{ quiz.questionsArray[quiz.currentQuestionIndex].kanji }}</p>
         <div
             v-else-if="isGame && options.selectFrom === 'hiragana' && quiz.currentQuestionIndex < quiz.questionsArray.length">
             <div class="animate-fade-in gap-10 md:text-2xl grid-cols-2">
