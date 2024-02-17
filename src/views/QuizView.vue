@@ -179,8 +179,8 @@
 <template>
     <div class="w-3/4 md:w-[600px] mx-auto">
         <form v-if="filteredWordsByGrade.length == 0">
-            <div class="mt-8 animate-fade-in  flex md:flex-row md:gap-0 gap-2 flex-col md:grid-cols-2">
-                <h1 class="text-center text-xl">Select Grade</h1>
+            <h1 class="mt-4 text-center text-xl p-2 md-text">Select Grade</h1>
+            <div class=" animate-fade-in  flex md:flex-row md:gap-0 gap-2 flex-col md:items-center md:grid-cols-2">
                 <div class="flex self-center max-w-[200px] mb-3 md:mb-0 md:max-w-[193px] flex-wrap gap-2 items-center">
                     <GradeSelector v-for="i in 8" :key="i" :grade="i" :gradeStatus="gradesSelected[i - 1]" @selectGrade="selectGrade"/>
                 </div>

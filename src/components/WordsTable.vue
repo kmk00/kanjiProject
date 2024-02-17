@@ -20,6 +20,12 @@ watch(gradesSelected, () => {
         .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));
 })
 
+const checkIfGradesInOptionSelected = () => {
+    // Check if any grade is selected
+    const anySelected = Object.values(gradesSelected).some((grade) => Object.values(grade).some((status) => status === true))
+    return anySelected
+}
+
 const beforeEnter = (el) => {
     el.style.opacity = 0
     el.style.transform = 'translateX(10px)'
@@ -47,7 +53,8 @@ const leave = (el,done) => {
 
 <template>
     <div class="mt-4">
-            <table class="mx-auto md:text-xl w-3/4 md:max-w-[980px] text-center ">
+        <Transition @enter="enter" @leave="leave" @before-enter="beforeEnter">
+            <table v-if="checkIfGradesInOptionSelected()" class="mx-auto md:text-xl w-3/4 md:max-w-[980px] text-center ">
                 <thead>
                     <tr>
                         <th>
@@ -78,10 +85,9 @@ const leave = (el,done) => {
                     </tr>
                 </thead>
                 <tbody >
-                    <TransitionGroup @enter="enter" @leave="leave" @before-enter="beforeEnter">
                         <WordRow v-for="(word,index) in filteredWords" :data-index="index" :key="word.kanji" :word="word"/>
-                    </TransitionGroup>
                 </tbody>
             </table>
-        </div>
+        </Transition>
+    </div>
 </template>

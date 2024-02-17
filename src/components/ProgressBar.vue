@@ -9,7 +9,7 @@ const calculateProgress = () => {
 </script>
 
 <template>
-    <div class="w-full border rounded-md border-blue-gray-200">
+    <div class="w-full self-center h-4 border rounded-md border-blue-gray-200">
         <div :style="`width: ${calculateProgress()}%`" class="bg-custom-orange h-full"></div>
     </div>
 </template>
