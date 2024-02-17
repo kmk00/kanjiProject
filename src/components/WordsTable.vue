@@ -54,8 +54,10 @@ const leave = (el,done) => {
 <template>
     <div class="mt-4">
         <Transition @enter="enter" @leave="leave" @before-enter="beforeEnter">
-            <table v-if="checkIfGradesInOptionSelected()" class="mx-auto md:text-xl w-3/4 md:max-w-[980px] text-center ">
-                <thead>
+            <div v-if="checkIfGradesInOptionSelected()">
+                <p v-if="filteredWords.length === 0" class="text-center md:text-3xl">No words for this grade</p>
+                <table v-else class="mx-auto md:text-xl w-3/4 md:max-w-[980px] text-center ">    
+                    <thead>
                     <tr>
                         <th>
                             <p class="my-4 py-4">Kanji</p>
@@ -86,8 +88,9 @@ const leave = (el,done) => {
                 </thead>
                 <tbody >
                         <WordRow v-for="(word,index) in filteredWords" :data-index="index" :key="word.kanji" :word="word"/>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </Transition>
     </div>
 </template>

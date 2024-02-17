@@ -72,6 +72,7 @@
             errorMessage.value = 'Please provide different options.'
             return
         }
+        
         errorMessage.value = ''
 
         //Create array of selected grades
@@ -85,6 +86,10 @@
         // Filter words by selected grades
         filteredWordsByGrade.value = Object.values(words).filter(word => gradesToFilter.includes(word.grade))
             .map(word => ({ ...word, kanji: Object.keys(words).find(key => words[key] === word) }));   
+
+        if(filteredWordsByGrade.value.length < 4){
+            errorMessage.value = 'No words for selected grades.'
+        }
     }
 
     const checkIfGradesInOptionSelected = () => {
