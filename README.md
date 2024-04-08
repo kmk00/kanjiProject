@@ -2,7 +2,7 @@
 
 The purpose of this application is to practice japanese Kanji, hiragana and english translations ordered by the grade which they are taught in Japanese schools.
 
-## Technologies 
+## Technologies and libraries
 
 - vue.js
 - vue-router
