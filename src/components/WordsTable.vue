@@ -55,7 +55,7 @@ const leave = (el, done) => {
 </script>
 
 <template>
-  <div class="mt-4">
+  <div class="mt-4 px-2">
     <Transition @enter="enter" @leave="leave" @before-enter="beforeEnter">
       <div v-if="checkIfGradesInOptionSelected()">
         <p v-if="filteredWords.length === 0" class="text-center md:text-3xl">
